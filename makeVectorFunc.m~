@@ -1,0 +1,7 @@
+function [ func ] = makeVectorFunc( input_args )
+%MAKEVECTORFUNC Summary of this function goes here
+%   Detailed explanation goes here
+
+
+end
+

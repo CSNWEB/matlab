@@ -1,8 +1,0 @@
-function  [result] = gaussnewton(x, fun, jacobian, steps = 100)
-    
- for i = 1:steps
-    x = x - inv(jacobian(x).' * jacobian(x)) * jacobian(x).' * fun(x);
- end
- result = x;
-end
-
