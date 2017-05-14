@@ -1,50 +1,46 @@
+% Close all figures and clear workspace
+close all;
 clear;
-clf;
-syms x a b c;
-f = symfun(3*sin(2*x)+7, x)
-%points = [-5,-4,-3,-2,-1,0,1,2,3,4,5];
-%points = -5:1:5;
-points = -5:1:5;
-y=zeros(size(points,2),1);
-for i=1:size(y,1)
-    y(i) = double(f(points(i)));
-end
+
+% Create 3*sin(2*x)+7 and plot it
+syms x;
+f = matlabFunction(paramedSinus([x,3,2,7]));
 fplot(f, 'Color', 'green')
 hold on;
 grid on;
-scatter(points,y)
+
+% Generate evaluation points which will be used fit the curve
+points = (-3:1:3).';
+points = (-3:0.2:3).';
+n = length(points)
+
+% Evaluate f at generated points 
+values = double(f(points));
+
+% plot generated points
+scatter(points,values);
 
 
-for i=1:size(points,2)
-    func_mat(i) = a*sin(points(i)*b)+c-y(i);
-end
-r = symfun(func_mat, [a])
-r([1,2,3])
-% r = symfun([a*sin(points(1)*b)+c-y(1);
-%             a*sin(points(2)*b)+c-y(2);
-%             a*sin(points(3)*b)+c-y(3)], [a b c])
-j = jacobian(r);
-matf_r = matlabFunction(r);
-matf_j = matlabFunction(j);
-func_r = @(x) (matf_r(x(1),x(2),x(3)).');
+% Create residual matrix with parameters a, b and c
+% model: rMatrix(i) = a*sin(b*x(i))+c-y(i)
+syms a b c;
+rMatrix = paramedSinus([points, a*ones(n,1), b*ones(n,1), c-values]);
 
-func_j = @(x) (matf_j(x(1),x(2),x(3)));
-%params = [2,1.5,6].'
-params = [2,1.6,6].'
+% Get a vetor matlab function based on rMatrix and its jacobian
+r = matlabFunction(rMatrix, 'Vars', {[a;b;c]});
+j = matlabFunction(jacobian(rMatrix), 'Vars', {[a;b;c]});
 
-params
-func_r(params)
-func_j(params)
+% set start parameters
+params = [1;1;0]
 
-current_f = '';
-for i=1:10
-    params = gaussnewton(params,func_r,func_j,1)    
-    %if mod(i,10) == 0
-        norm(func_r(params))
-        f_step = symfun(params(1)*sin(x*params(2))+params(3), x);
-        delete(current_f);
-        current_f = fplot(f_step, 'Color', 'red');
-        drawnow;    
-        pause(1);
-    %end
+%init function
+current_f='';
+for i=1:20
+    params = gaussnewton(params,r,j,1)      
+    norm(r(params))
+    f_step = paramedSinus([x,params.'])    
+    delete(current_f);    
+    current_f = fplot(f_step, 'Color', 'red');
+    drawnow;    
+    pause(0.2);
 end
