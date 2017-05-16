@@ -15,22 +15,27 @@ function [fitresult, gof] = createFit(x, y)
 
 
 %% Fit: 'untitled fit 1'.
+P5
+
 [xData, yData] = prepareCurveData( x, y );
 
 % Set up fittype and options.
 ft = fittype( 'gauss5' );
+
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Algorithm = 'Levenberg-Marquardt';
-opts.Display = 'Off';
 opts.Lower = [-Inf -Inf 0 -Inf -Inf 0 -Inf -Inf 0 -Inf -Inf 0 -Inf -Inf 0];
 opts.StartPoint = [0.08139 630 4.52430291249564 0.062464093417129 621.5 6.60153662783602 0.0613278652259899 638 7.78536915375689 0.05066 577 14.3629568331098 0.0490458751859601 608 10.1880036889133];
+start = [0.08139 630 4.52430291249564 0.062464093417129 621.5 6.60153662783602 0.0613278652259899 638 7.78536915375689 0.05066 577 14.3629568331098 0.0490458751859601 608 10.1880036889133];
+fun = @(x,xData) (ft(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),x(9),x(10),x(11),x(12),x(13),x(14),x(15),xData));
+fun(start, xData)
 
 % Fit model to data.
 [fitresult, gof] = fit( xData, yData, ft, opts );
-
 % Plot fit with data.
+
 figure( 'Name', 'untitled fit 1' );
-h = plot( fitresult, xData, yData );
+h = plot( fitresult, xData, yData  );
 legend( h, 'y vs. x', 'untitled fit 1', 'Location', 'NorthEast' );
 % Label axes
 xlabel x

@@ -1,0 +1,26 @@
+@BOOK{Hermann2011,
+	AUTHOR = {Hermann, Martin},
+	YEAR = {2011},
+	TITLE = {Numerische Mathematik - },
+	EDITION = {},
+	ISBN = {978-3-486-71970-3},
+	PUBLISHER = {Walter de Gruyter},
+	ADDRESS = {Berlin},
+}
+
+@Book{•,
+ALTauthor = {•},
+ALTeditor = {•},
+title = {•},
+publisher = {•},
+year = {•},
+OPTkey = {•},
+OPTvolume = {•},
+OPTnumber = {•},
+OPTseries = {•},
+OPTaddress = {•},
+OPTedition = {•},
+OPTmonth = {•},
+OPTnote = {•},
+OPTannote = {•}
+}

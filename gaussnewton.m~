@@ -1,8 +1,6 @@
 function  [x, i] = gaussnewton(x, fun, jacobian, maxSteps, outfun )
+ 
  TOL = 10e-8;
- if nargin > 4
-    outfun(x, struct('iteration',0,'resnorm',0), 'init');
- end
  for i = 1:maxSteps
     xNew = double(x - inv(jacobian(x).' * jacobian(x)) * jacobian(x).' * fun(x));
     
@@ -12,14 +10,7 @@ function  [x, i] = gaussnewton(x, fun, jacobian, maxSteps, outfun )
     end
     
     x = xNew;
-    
-    if nargin > 4
-        outfun(x, struct('iteration',i,'resnorm',norm(fun(x))), 'iter');
-    end
- end
- 
- if nargin > 4
-    outfun(x, struct('iteration',i,'resnorm',norm(fun(x))), 'done');
+    outfun(x, struct(
  end
 end
 

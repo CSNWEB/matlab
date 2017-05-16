@@ -1,0 +1,92 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{tabto}
+\usepackage{caption}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\geometry{a4paper, top=10mm, left=30mm, right=25mm, bottom=30mm, headsep=10mm, footskip=12mm}
+\title{Nichtlineare Ausgleichsprobleme}
+\author{Karl Westphal, Hugalf Bernburg, Christoph Staudt}
+
+
+
+\begin{document}
+\maketitle
+\section{Das Problem}
+Sowohl das Gauß-Newton Verfahren als auch das Levenberg-Marquardt Verfahren behandeln die numerische Lösung des Quadratmittelproblems:
+\begin{align*}
+\min_{\beta} \left [\frac{1}{2}||\vec{y}-F(x,\beta)||_2^2 \right]\text{ mit }
+F(x,\beta)=
+\begin{pmatrix}
+f(x_{1_1},...,x_{1_l},\beta_1,..,\beta_m)\\
+...\\
+...\\
+f(x_{n_1},...,x_{n_l},\beta_1,..,\beta_m)
+\end{pmatrix}
+, \, \vec{y} \in \mathbb{R}^n , \, \vec{\beta} \in \mathbb{R}^m.
+\end{align*}
+Im Kontext einer Ausgleichungsrechnung, $(x_{i_1},..,x_{i_l})$ die Stellgrößen, $\vec{y}$ der Vektor der Messwerte, $\vec{\beta}$ der Parametervektor und
+ $F:\mathbb{R}^m\rightarrow \mathbb{R}^n$ die nach
+  $\vec{\beta}$ zu optimierende Funktion darstellen.Eine häufige Anwendung des Verfahrens ist die Approximation einer Kurve, die nur durch verrauschte Daten erahnt werden kann. Grundlage ist jedoch, dass man schon Eigenschaften der Funktion kennt, nur nicht deren Parameter.
+\section{Das Gauß-Newton Verfahren}
+\subparagraph{Einleitung}
+Das Gauß-Newton-Verfahren (nach Carl Friedrich Gauß und Isaac Newton) kann als Erweiterung des schon bekannten Newton-Verfahrens betrachtet werden. Es führt ein nichtlineares Ausgleichsproblem auf eine Abfolge linearer Ausgleichsprobleme zurück.
+\subparagraph{Das Vorgehen}
+\begin{itemize}
+\item Aufstellen der Residuumsfunktion 	\tab $\vec{r}=(\vec{F}-\vec{y}),\vec{r}:\mathbb{R}^m\rightarrow \mathbb{R}^n ,m \leq n$
+\item Linearisierung des Residuums  \tab $r(\beta)\approx r(\beta^k)+J_r(\beta^k)(\beta-\beta^k)), \beta \in \mathbb{R}^m$
+\item Lösung des linearen Ausgleichsproblems \tab $\Vert(A\vec{x}-\vec{b})\Vert\rightarrow min! \Leftrightarrow A^tA\vec{x}=A^t\vec{b}$
+\item Iteration \tab $\beta^{k+1}=\beta^k-J_r^+(\beta^k)r(\beta^k)$
+\end{itemize}
+\section{Das Levenberg-Marquardt Verfahren}
+\subparagraph{Einleitung}
+Das LM-Verfahren ist wie das GN-Verfahren ein Optimierungsverfahren, das Iterativ arbeitet.
+
+
+\subparagraph{LM als Trust-Region-Verfahren}
+Wie Jedes Iterationsverfahren benötigen wir einen Startwert $\beta_0$
+Hier benötigen wir noch eine Angabe über die zu vertrauende Region, also allgemein wird eine Kugel um $\beta_0$ mit Radius $r$ als vertrauens-Bereich gewählt.
+Nun wird unsere Funktion\\ $g(\beta)=\frac{1}{2}||y-F(x,\beta)||_2^2$ approximiert mithilfe eines Modells
+\begin{align}
+m_k(p)=g(\beta^k)+grad_{\beta}(\beta^k)^Tp+\frac{1}{2}p^TB(\beta^k)p
+\end{align}
+Hierbei ist $B(\beta^k)$ die Hessematrix von $g$ oder eine Approximation eben dieser z.B. $J^TJ$.
+
+
+Nun suchen wir das Minimum des Modells unter der Nebenbedingung, dass wir in der Vertrauensregion bleiben.
+\begin{table}[!h]
+ \caption{Pro und Cons des LM-Verfahren}
+ \label{tab:table1}
+\begin{tabular}{ |p{6cm}|p{6cm}|l |l| }
+ \hline
+    Vorteile & Nachteile\\
+   \hline
+   Sichere Konvergenz in einem lokalem Minimum &
+   Bei weiter Entfernung zum Minimum nur langsames Nähern\\
+   \hline
+   Wenn $x^{(k)}$ nah am Minimum, dann verhält sich LM wie Gauss-Newton &Bei nicht erfolgreichen Schritten kein Fortschritt \\
+   \hline
+   Verfahren funktioniert auch falls $J$ keinen Vollen Spaltenrang hat&\\
+   \hline
+   Es werden keine zu großen schritte
+    gemacht, die zu anderen Minima
+    trotz guter Startwerte führen&\\
+    \hline
+
+
+
+
+ \end{tabular}
+\end{table}
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{lit}
+
+
+\end{document}

@@ -30,9 +30,9 @@ rFunc = makeVectorFunc(r);
 params = [0.03 0.02 0.03 0.02 0.011 630 615 697 552 577 10 31 151 30 12].';
 params = [3 3 3 3 3 550 570 600 650 700 25 25 25 25 80].';
 params = [0.08139 0.062464093417129 0.0613278652259899 0.05066 0.0490458751859601 630 621.5 638 577 608 4.52430291249564   6.60153662783602   7.78536915375689   14.3629568331098   10.1880036889133].';
-%params = [8.139 6.2464093417129 6.13278652259899 5.066 4.90458751859601 630 621.5 638 577 608 4.52430291249564   6.60153662783602   7.78536915375689   14.3629568331098   10.1880036889133].';
-%options = optimoptions(@lsqnonlin,'PlotFcn', {@optimplotx, @optimplotfval, @optimplotresnorm}, 'OutputFcn', @outfun);
-params = lsqnonlin(rFunc, params, [-Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf 0 0 0 0 0], [])
+params = [8.139 6.2464093417129 6.13278652259899 5.066 4.90458751859601 630 621.5 638 577 608 4.52430291249564   6.60153662783602   7.78536915375689   14.3629568331098   10.1880036889133].';
+options = optimoptions(@lsqnonlin,'PlotFcn', {@optimplotx, @optimplotfval, @optimplotresnorm}, 'OutputFcn', @outfun);
+params = lsqnonlin(rFunc, params, [], [], options)
 norm(rFunc(params))
 [X2, Y2] = gaussglocken(reshape(params, [anz 3]));
 plot(X2,Y2)
@@ -44,8 +44,7 @@ g = @(x) (0.5 * norm(rFunc(x))^2);
 jG = matlabFunction(jacobian(g(x)).', 'Vars', {x});
 
 
-%params = myLevenbergMarquardt2(rFunc, g, jR, jG, params, 100, 3, 50)
-params = myLevenbergMarquardt(rFunc,g, jR, jG,params, 100, 3, 50)
+params = myLevenbergMarquardt2(rFunc, g, jR, jG, params, 100, 3, 50)
 params = gaussnewton(params,rFunc,jFunc)
 [X2, Y2] = gaussglocken(reshape(params, [anz 3]));
 

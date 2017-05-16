@@ -1,0 +1,31 @@
+function [ xk ] = myLevenbergMarquardt2( R, g, jR, jG, xk, maxStep, radius, maxRadius)
+     syms l;
+     for i=1:maxStep
+         model = @(p) (g(xk)+jG(xk).'*p+0.5*p.'*jR(xk)'*jR(xk)*p);
+         % Case lambda = 0
+         p = -1*(jR(xk).' * jR(xk)) \ jG(xk);
+         if norm(p) > radius
+            
+            pL = @(l) (norm((jR(xk).' * jR(xk) + l * eye(size(jR(xk),2))) \ (-1*jG(xk)))^2-radius);            
+            jacpL = jacobian(pL(l));            
+            jpL = symfun (jacpL, [l]);                                    
+            lambda = gaussnewton(0.1, pL, jpL);                        
+            p = (jR(xk).' * jR(xk) + lambda * eye(size(jR(xk),2))) \ (-1*jG(xk));
+            norm(p)
+         end         
+         nextXk = xk + p
+         roh = abs(g(xk)-g(nextXk))/(g(xk)-model(p))
+         
+         if roh >= 0.25
+            % step successful set new xk
+            xk = nextXk;
+         end
+         if roh < 0.25 
+             % 
+             radius = 0.25 * radius
+         elseif roh > 0.75 && norm(p) == radius
+             radius = min(2*radius, maxRadius)        
+         end
+     end      
+end
+
